@@ -31,7 +31,7 @@ private readonly CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID';
 ```
 
 In addition, ensure the Redirect URI is configured in your Spotify Developer Dashboard:
-- `http://127.0.0.1:4200/callback` (לפיתוח)
+- `http://127.0.0.1:4200/callback` (for development)
 
 ## Running the Application
 
