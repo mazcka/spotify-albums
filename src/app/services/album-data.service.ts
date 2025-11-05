@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 export interface Album {
@@ -40,19 +40,20 @@ export interface AlbumDetails extends Album {
   providedIn: 'root'
 })
 export class AlbumDataService {
-  private readonly SPOTIFY_API_URL = 'https://api.spotify.com/v1';
-
   readonly searchResults = signal<Album[]>([]);
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
   readonly hasMore = signal<boolean>(false);
   readonly currentQuery = signal<string>('');
+
+  private readonly SPOTIFY_API_URL = 'https://api.spotify.com/v1';
+
   private currentOffset = 0;
   private readonly limit = 20;
 
-  constructor(private http: HttpClient) { }
+  private readonly http = inject(HttpClient);
 
-  async searchAlbums(query: string, offset: number = 0): Promise<void> {
+  readonly searchAlbums = async (query: string, offset: number = 0): Promise<void> => {
     if (!query.trim()) {
       this.searchResults.set([]);
       this.hasMore.set(false);
@@ -104,7 +105,7 @@ export class AlbumDataService {
     }
   }
 
-  async loadMoreAlbums(): Promise<void> {
+  readonly loadMoreAlbums = async (): Promise<void> => {
     const query = this.currentQuery();
     if (!query || this.isLoading() || !this.hasMore()) {
       return;
@@ -113,7 +114,7 @@ export class AlbumDataService {
     await this.searchAlbums(query, this.currentOffset);
   }
 
-  async getAlbumDetails(id: string): Promise<AlbumDetails | null> {
+  readonly getAlbumDetails = async (id: string): Promise<AlbumDetails | null> => {
     try {
       const album = await this.http.get<AlbumDetails>(
         `${this.SPOTIFY_API_URL}/albums/${id}`
@@ -121,6 +122,7 @@ export class AlbumDataService {
 
       return album || null;
     } catch (error: any) {
+      console.error('Error getting album details:', error);
       throw error;
     }
   }

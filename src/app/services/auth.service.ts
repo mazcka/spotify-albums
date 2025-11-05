@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -13,6 +13,14 @@ export interface TokenResponse {
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly accessToken = signal<string | null>(null);
+  private readonly refreshToken = signal<string | null>(null);
+  private readonly tokenExpiry = signal<number | null>(null);
+
+  readonly getAccessToken = computed(() => this.accessToken());
+  readonly getRefreshToken = computed(() => this.refreshToken());
+  readonly getTokenExpiry = computed(() => this.tokenExpiry());
+
   private readonly CLIENT_ID = 'd3c37bda845744a7b6df516d40d10cec';
   private readonly REDIRECT_URI = this.getRedirectUri();
   private readonly SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
@@ -21,6 +29,9 @@ export class AuthService {
   private readonly TOKEN_STORAGE_KEY = 'spotify_token';
   private readonly REFRESH_STORAGE_KEY = 'spotify_refresh_token';
   private readonly EXPIRY_STORAGE_KEY = 'spotify_token_expiry';
+
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
 
   private getRedirectUri(): string {
     const origin = window.location.origin;
@@ -35,29 +46,14 @@ export class AuthService {
     return `${origin}/callback`;
   }
 
-  private readonly accessToken = signal<string | null>(null);
-  private readonly refreshToken = signal<string | null>(null);
-  private readonly tokenExpiry = signal<number | null>(null);
-
   readonly isAuthenticated = computed(() => {
-    const token = this.accessToken();
-    const expiry = this.tokenExpiry();
+    const token = this.getAccessToken();
+    const expiry = this.getTokenExpiry();
     if (!token || !expiry) return false;
     return Date.now() < expiry;
   });
 
-  readonly getAccessToken = () => this.accessToken();
-  readonly getRefreshToken = () => this.refreshToken();
-  readonly getTokenExpiry = () => this.tokenExpiry();
-
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {
-    this.loadTokensFromStorage();
-  }
-
-  private loadTokensFromStorage(): void {
+  readonly loadTokensFromStorage = (): void => {
     try {
       const token = sessionStorage.getItem(this.TOKEN_STORAGE_KEY);
       const refresh = sessionStorage.getItem(this.REFRESH_STORAGE_KEY);
@@ -80,13 +76,13 @@ export class AuthService {
     }
   }
 
-  private clearStoredTokens(): void {
+  readonly clearStoredTokens = (): void => {
     sessionStorage.removeItem(this.TOKEN_STORAGE_KEY);
     sessionStorage.removeItem(this.REFRESH_STORAGE_KEY);
     sessionStorage.removeItem(this.EXPIRY_STORAGE_KEY);
   }
 
-  private saveTokensToStorage(token: string, refresh: string, expiry: number): void {
+  readonly saveTokensToStorage = (token: string, refresh: string, expiry: number): void => {
     try {
       sessionStorage.setItem(this.TOKEN_STORAGE_KEY, token);
       sessionStorage.setItem(this.REFRESH_STORAGE_KEY, refresh);
@@ -96,7 +92,7 @@ export class AuthService {
     }
   }
 
-  private async generateCodeVerifier(): Promise<string> {
+  readonly generateCodeVerifier = async (): Promise<string> => {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
 
@@ -107,7 +103,7 @@ export class AuthService {
       .replace(/=/g, '');
   }
 
-  private async generateCodeChallenge(verifier: string): Promise<string> {
+  readonly generateCodeChallenge = async (verifier: string): Promise<string> => {
     const encoder = new TextEncoder();
     const data = encoder.encode(verifier);
     const digest = await crypto.subtle.digest('SHA-256', data);
@@ -119,7 +115,7 @@ export class AuthService {
       .replace(/=/g, '');
   }
 
-  async login(): Promise<void> {
+  readonly login = async (): Promise<void> => {
     try {
       const codeVerifier = await this.generateCodeVerifier();
       const codeChallenge = await this.generateCodeChallenge(codeVerifier);
@@ -142,7 +138,7 @@ export class AuthService {
     }
   }
 
-  async handleCallback(code: string): Promise<void> {
+  readonly handleCallback = async (code: string): Promise<void> => {
     try {
       const codeVerifier = sessionStorage.getItem('pkce_code_verifier');
       if (!codeVerifier) {
@@ -179,8 +175,8 @@ export class AuthService {
     }
   }
 
-  async refreshAccessToken(): Promise<string | null> {
-    const refresh = this.refreshToken();
+  readonly refreshAccessToken = async (): Promise<string | null> => {
+    const refresh = this.getRefreshToken();
     if (!refresh) {
       return null;
     }
@@ -203,7 +199,7 @@ export class AuthService {
       ).toPromise();
 
       if (response) {
-        const refreshToken = response.refresh_token || this.refreshToken() || '';
+        const refreshToken = response.refresh_token || this.getRefreshToken() || '';
         this.setTokens({
           ...response,
           refresh_token: refreshToken
@@ -218,21 +214,26 @@ export class AuthService {
     }
   }
 
-  private setTokens(response: TokenResponse): void {
+  readonly setTokens = (response: TokenResponse): void => {
     const expiryTime = Date.now() + (response.expires_in - 60) * 1000;
 
-    this.accessToken.set(response.access_token);
-    this.refreshToken.set(response.refresh_token);
-    this.tokenExpiry.set(expiryTime);
+    this.accessToken.set(response.access_token || null);
+    this.refreshToken.set(response.refresh_token || null);
+    this.tokenExpiry.set(expiryTime || null);
 
-    this.saveTokensToStorage(response.access_token, response.refresh_token, expiryTime);
+    this.saveTokensToStorage(response.access_token || '', response.refresh_token || '', expiryTime || 0);
   }
 
-  logout(): void {
-    this.accessToken.set(null);
-    this.refreshToken.set(null);
-    this.tokenExpiry.set(null);
-    this.clearStoredTokens();
-    this.router.navigate(['/']);
+  readonly logout = (): void => {
+    try {
+      this.accessToken.set(null);
+      this.refreshToken.set(null);
+      this.tokenExpiry.set(null);
+      this.clearStoredTokens();
+      this.router.navigate(['/']);
+    } catch (error) {
+      console.error('Error logging out:', error);
+      throw error;
+    }
   }
 }

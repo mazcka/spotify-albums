@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecurityService {
-  constructor(private sanitizer: DomSanitizer) { }
+  private readonly sanitizer = inject(DomSanitizer);
 
-  sanitizeInput(value: string): SafeHtml {
+  readonly sanitizeInput = (value: string): SafeHtml => {
     if (!value) return '';
     return this.sanitizer.sanitize(1, value) || '';
   }

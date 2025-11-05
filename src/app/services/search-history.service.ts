@@ -4,10 +4,10 @@ import { Injectable, signal, effect } from '@angular/core';
   providedIn: 'root'
 })
 export class SearchHistoryService {
+  readonly searchHistory = signal<string[]>([]);
+
   private readonly STORAGE_KEY = 'spotify_search_history';
   private readonly MAX_HISTORY = 5;
-
-  readonly searchHistory = signal<string[]>([]);
 
   constructor() {
     this.loadHistory();
@@ -20,7 +20,7 @@ export class SearchHistoryService {
     });
   }
 
-  private loadHistory(): void {
+  private readonly loadHistory = (): void => {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
@@ -32,7 +32,7 @@ export class SearchHistoryService {
     }
   }
 
-  addToHistory(query: string): void {
+  readonly addToHistory = (query: string): void => {
     if (!query.trim()) return;
 
     const current = this.searchHistory();
@@ -44,17 +44,17 @@ export class SearchHistoryService {
     this.searchHistory.set(updated);
   }
 
-  removeFromHistory(query: string): void {
+  readonly removeFromHistory = (query: string): void => {
     const current = this.searchHistory();
     const filtered = current.filter(q => q !== query);
     this.searchHistory.set(filtered);
-    
+
     if (filtered.length === 0) {
       localStorage.removeItem(this.STORAGE_KEY);
     }
   }
 
-  clearHistory(): void {
+  readonly clearHistory = (): void => {
     this.searchHistory.set([]);
     localStorage.removeItem(this.STORAGE_KEY);
   }
