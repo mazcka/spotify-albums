@@ -1,0 +1,66 @@
+@let emailControl = registerForm.get('email');
+@let usernameControl = registerForm.get('username');
+@let passwordControl = registerForm.get('password');
+@let confirmPasswordControl = registerForm.get('confirmPassword');
+@let isSubmittingValue = isSubmitting();
+@let canSubmitValue = canSubmit();
+
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>person_add</mat-icon>
+        הרשמה
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>כתובת אימייל</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="your.email@example.com" />
+          <mat-icon matPrefix>email</mat-icon>
+          @if (emailControl?.invalid && emailControl?.touched) {
+          <mat-error>{{ getErrorMessage('email') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>שם משתמש</mat-label>
+          <input matInput type="text" formControlName="username" placeholder="username123" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (usernameControl?.invalid && usernameControl?.touched) {
+          <mat-error>{{ getErrorMessage('username') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>סיסמה</mat-label>
+          <input matInput type="password" formControlName="password" placeholder="Password123" />
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (passwordControl?.invalid && passwordControl?.touched) {
+          <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>אימות סיסמה</mat-label>
+          <input matInput type="password" formControlName="confirmPassword" placeholder="Password123" />
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (confirmPasswordControl?.invalid && confirmPasswordControl?.touched) {
+          <mat-error>{{ getErrorMessage('confirmPassword') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" class="submit-button" [disabled]="!canSubmitValue">
+          @if (isSubmittingValue) {
+          <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+          } @else {
+          <mat-icon>check</mat-icon>
+          }
+          הרשמה
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

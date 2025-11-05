@@ -1,0 +1,88 @@
+@use '../../../../styles/variables' as *;
+
+.album-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: $spotify-dark-secondary !important;
+    padding: 16px;
+
+    &:hover {
+        transform: translateY(-8px);
+        background-color: $spotify-dark !important;
+
+        .album-image {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    .album-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        transition: all 0.3s ease;
+    }
+
+    mat-card-content {
+        padding: 0;
+
+        .album-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: $spotify-text-primary;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.3;
+        }
+
+        .album-artist {
+            font-size: 14px;
+            color: $spotify-text-secondary;
+            margin: 0 0 8px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.3;
+        }
+
+        .album-date {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: $spotify-text-muted;
+            margin: 0;
+
+            mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .album-card {
+        padding: 12px;
+
+        .album-image {
+            height: 150px;
+        }
+
+        mat-card-content {
+            .album-name {
+                font-size: 14px;
+            }
+
+            .album-artist {
+                font-size: 12px;
+            }
+        }
+    }
+}

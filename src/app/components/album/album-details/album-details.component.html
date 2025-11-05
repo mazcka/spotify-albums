@@ -1,0 +1,86 @@
+@let isLoadingData = isLoading();
+@let errorMessage = error();
+@let albumData = album();
+
+<div class="album-details-container">
+  @if (isLoadingData) {
+  <div class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>טוען פרטי אלבום...</p>
+  </div>
+  }
+
+  @if (errorMessage && !isLoading) {
+  <mat-card class="error-card">
+    <mat-card-content>
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        חזרה לחיפוש
+      </button>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  @if (albumData && !isLoadingData) {
+  <mat-card class="album-header-card">
+    <div class="album-header">
+      <img [src]="albumData!.images[0]?.url || '/assets/placeholder.png'" [alt]="albumData!.name" class="album-large-image" />
+      <div class="album-info">
+        <h1 class="album-title">{{ albumData!.name }}</h1>
+        <p class="album-artists">
+          {{ getArtistsNames(albumData!.artists) }}
+        </p>
+        <div class="album-meta">
+          <span class="meta-item">
+            <mat-icon>calendar_today</mat-icon>
+            {{ formatDate(albumData!.release_date) }}
+          </span>
+          <span class="meta-item">
+            <mat-icon>queue_music</mat-icon>
+            {{ albumData!.total_tracks }} שירים
+          </span>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="tracks-card">
+    <mat-card-content>
+      <div class="tracks-list">
+        <!-- Header Row -->
+        <div class="tracks-header">
+          <div class="header-number">#</div>
+          <div class="header-title">Title</div>
+          <div class="header-duration">
+            <mat-icon>schedule</mat-icon>
+          </div>
+        </div>
+
+        <!-- Track Rows -->
+        @for (track of albumData!.tracks.items; track track.id) {
+        <div class="track-row">
+          <div class="track-number-cell">
+            <span class="track-number">{{ track.track_number }}</span>
+          </div>
+          <div class="track-info-cell">
+            <div class="track-name">{{ track.name }}</div>
+            <div class="track-artists">{{ getArtistsNames(track.artists) }}</div>
+          </div>
+          <div class="track-actions-cell">
+            <span class="track-duration">{{ formatDuration(track.duration_ms) }}</span>
+          </div>
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="back-button-container">
+    <button mat-raised-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      חזרה לחיפוש
+    </button>
+  </div>
+  }
+</div>

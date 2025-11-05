@@ -1,0 +1,24 @@
+@let historyValue = history();
+
+@if (historyValue.length > 0) {
+<mat-card class="history-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>history</mat-icon>
+      חיפושים אחרונים
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="chips-container">
+      @for (query of historyValue; track query) {
+      <mat-chip (click)="selectQuery(query)" class="history-chip">
+        <span>{{ query }}</span>
+        <button mat-icon-button class="remove-button" (click)="removeQuery(query, $event)" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-chip>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>
+}

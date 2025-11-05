@@ -1,0 +1,351 @@
+@use '../../../../styles/variables' as *;
+
+.album-details-container {
+  padding: 24px;
+  background: $spotify-black;
+  min-height: calc(100vh - 64px);
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    gap: 16px;
+
+    p {
+      color: $spotify-text-secondary;
+      font-size: 16px;
+    }
+
+  }
+
+  .error-card {
+    margin-top: 24px;
+    background-color: $spotify-dark-secondary !important;
+
+    mat-card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px;
+
+      mat-icon {
+        color: $spotify-text-muted;
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 18px;
+        color: $spotify-text-secondary;
+      }
+    }
+  }
+
+  .album-header-card {
+    margin-top: 24px;
+    background-color: transparent !important;
+    background: linear-gradient(180deg, rgba(18, 18, 18, 0.6) 0%, $spotify-black 100%);
+
+    .album-header {
+      display: flex;
+      gap: 32px;
+      padding: 32px;
+
+      .album-large-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      }
+
+      .album-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        .album-title {
+          font-size: 48px;
+          font-weight: 900;
+          margin: 0 0 16px 0;
+          color: $spotify-text-primary;
+          line-height: 1.2;
+          letter-spacing: -1px;
+        }
+
+        .album-artists {
+          font-size: 18px;
+          color: $spotify-text-primary;
+          margin: 0 0 24px 0;
+          font-weight: 500;
+        }
+
+        .album-meta {
+          display: flex;
+          gap: 24px;
+
+          .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: $spotify-text-secondary;
+
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .tracks-card {
+    margin-top: 24px;
+    background-color: transparent !important;
+
+    mat-card-content {
+      padding: 0;
+    }
+
+    .tracks-list {
+      width: 100%;
+
+      .tracks-header {
+        display: grid;
+        grid-template-columns: 48px 1fr auto;
+        gap: 16px;
+        padding: 8px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: $spotify-text-secondary;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+
+        .header-number {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .header-title {
+          display: flex;
+          align-items: center;
+        }
+
+        .header-duration {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 80px;
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+
+      .track-row {
+        display: grid;
+        grid-template-columns: 48px 1fr auto;
+        gap: 16px;
+        padding: 8px 16px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+        min-height: 56px;
+        align-items: center;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .track-number-cell {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+
+          .track-number {
+            font-size: 14px;
+            color: $spotify-text-secondary;
+            font-weight: 400;
+          }
+
+        }
+
+        .track-info-cell {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          min-width: 0;
+          overflow: hidden;
+
+          .track-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: $spotify-text-primary;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.4;
+          }
+
+          .track-artists {
+            font-size: 14px;
+            color: $spotify-text-secondary;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.4;
+          }
+        }
+
+        .track-actions-cell {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          min-width: 120px;
+          justify-content: flex-end;
+
+          .action-button {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+              color: $spotify-text-secondary;
+            }
+
+            &:hover {
+              mat-icon {
+                color: $spotify-text-primary;
+              }
+            }
+          }
+
+          .track-duration {
+            font-size: 14px;
+            color: $spotify-text-secondary;
+            min-width: 45px;
+            text-align: right;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+
+  .back-button-container {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+
+    button {
+      border-radius: 500px;
+      padding: 12px 32px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .album-details-container {
+    padding: 16px;
+
+    .album-header-card {
+      .album-header {
+        flex-direction: column;
+        gap: 24px;
+        padding: 24px 16px;
+
+        .album-large-image {
+          width: 100%;
+          height: auto;
+          max-height: 300px;
+        }
+
+        .album-info {
+          .album-title {
+            font-size: 32px;
+          }
+
+          .album-artists {
+            font-size: 16px;
+          }
+
+          .album-meta {
+            flex-direction: column;
+            gap: 12px;
+          }
+        }
+      }
+    }
+
+    .tracks-card {
+      .tracks-list {
+        .tracks-header {
+          padding: 8px 12px;
+          gap: 12px;
+          font-size: 11px;
+        }
+
+        .track-row {
+          padding: 8px 12px;
+          gap: 12px;
+          min-height: 48px;
+
+          .track-number-cell {
+            .track-number {
+              font-size: 12px;
+            }
+
+            .play-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+            }
+          }
+
+          .track-info-cell {
+            .track-name {
+              font-size: 14px;
+            }
+
+            .track-artists {
+              font-size: 12px;
+            }
+          }
+
+          .track-actions-cell {
+            min-width: 100px;
+            gap: 4px;
+
+            .track-duration {
+              font-size: 12px;
+              min-width: 40px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

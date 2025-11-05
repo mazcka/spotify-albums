@@ -1,0 +1,26 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <div class="toolbar-content">
+          <div class="title-section">
+            <mat-icon svgIcon="spotify" class="spotify-icon" (click)="navigateToHome()"></mat-icon>
+            <span class="page-title">{{ pageTitle() }}</span>
+          </div>
+
+    <div class="actions-section">
+      <button mat-button routerLink="/register" [routerLinkActive]="['active']">
+        <mat-icon>person_add</mat-icon>
+        הרשמה
+      </button>
+      @if (!isAuthenticated()) {
+      <button mat-raised-button color="accent" (click)="login()">
+        <mat-icon>login</mat-icon>
+        התחברות
+      </button>
+      } @else {
+      <button mat-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        התנתקות
+      </button>
+      }
+    </div>
+  </div>
+</mat-toolbar>

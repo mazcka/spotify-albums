@@ -1,0 +1,14 @@
+@use '../styles/variables' as *;
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: $spotify-black;
+
+    .main-content {
+        flex: 1;
+        padding: 0;
+        background: $spotify-black;
+    }
+}

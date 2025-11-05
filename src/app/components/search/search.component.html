@@ -1,0 +1,71 @@
+@let searchQueryValue = searchQuery();
+@let searchResultsValue = searchResults();
+@let isLoadingData = isLoading();
+@let errorMessage = error();
+
+<div class="search-container">
+  <div class="search-header">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>חפש אלבומים</mat-label>
+      <input matInput type="text" [value]="searchQueryValue" (input)="onSearchInput($any($event.target).value)"
+        placeholder="הזן שם אלבום או אמן..." />
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchQueryValue.trim()) {
+      <button mat-icon-button matSuffix (click)="clearSearch()" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <app-search-history [history]="history()" (onQuerySelect)="onHistoryQuerySelect($event)"
+    (onQueryRemove)="onHistoryQueryRemove($event)" />
+
+
+  @if (errorMessage && !isLoadingData) {
+  <mat-card class="error-card">
+    <mat-card-content>
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  @if (isLoadingData && searchResultsValue.length === 0) {
+  <div class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>מחפש...</p>
+  </div>
+  }
+
+  @if (searchResultsValue.length > 0) {
+  <div class="results-container">
+    <div class="results-grid" (scroll)="onScrolled($event)">
+      @for (album of searchResultsValue; track album.id) {
+      <app-album-card [album]="album" />
+      }
+    </div>
+
+    @if ((isLoadingData || isLoadingMore()) && searchResultsValue.length > 0) {
+    <div class="loading-more-container">
+      <mat-spinner diameter="30"></mat-spinner>
+      <p>טוען עוד תוצאות...</p>
+    </div>
+    }
+
+  </div>
+  }
+
+  @if (searchResultsValue.length === 0 && !isLoadingData && !errorMessage && searchQueryValue.trim()) {
+  <mat-card class="no-results-card">
+    <mat-card-content>
+      <mat-icon>search_off</mat-icon>
+      <p>לא נמצאו תוצאות</p>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  @if (searchResultsValue.length === 0 && !isLoadingData && !errorMessage && !searchQueryValue.trim()) {
+  <app-search-welcome />
+  }
+</div>

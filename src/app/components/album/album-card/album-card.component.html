@@ -1,0 +1,16 @@
+@let albumData = album();
+
+<mat-card class="album-card" (click)="navigateToAlbum()">
+    <img mat-card-image [src]="albumData.images[0]?.url || '/assets/placeholder.png'" [alt]="albumData.name"
+        class="album-image" />
+    <mat-card-content>
+        <h3 class="album-name">{{ albumData.name }}</h3>
+        <p class="album-artist">
+            {{ getArtistsNames(albumData.artists) }}
+        </p>
+        <p class="album-date">
+            <mat-icon>calendar_today</mat-icon>
+            {{ formatDate(albumData.release_date) }}
+        </p>
+    </mat-card-content>
+</mat-card>

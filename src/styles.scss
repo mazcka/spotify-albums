@@ -1,0 +1,165 @@
+@use 'styles/variables' as *;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    background: $spotify-black;
+    color: $spotify-text-primary;
+    min-height: 100vh;
+}
+
+.mat-mdc-toolbar {
+    background-color: $spotify-dark !important;
+    color: $spotify-text-primary !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mat-mdc-button,
+.mat-mdc-raised-button {
+    &.mat-primary {
+        background-color: $spotify-green !important;
+        color: $spotify-black !important;
+
+        &:hover:not(:disabled) {
+            background-color: $spotify-green-hover !important;
+            transform: scale(1.05);
+            transition: all 0.2s;
+        }
+    }
+}
+
+.mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+        background-color: $spotify-dark-secondary !important;
+
+        .mat-mdc-form-field-flex {
+            .mat-mdc-floating-label {
+                color: $spotify-text-secondary !important;
+            }
+
+            .mat-mdc-form-field-input-control input {
+                color: $spotify-text-primary !important;
+            }
+        }
+    }
+
+    &.mat-focused {
+        .mat-mdc-text-field-wrapper {
+            .mat-mdc-form-field-flex {
+                .mat-mdc-floating-label {
+                    color: $spotify-green !important;
+                }
+            }
+        }
+    }
+}
+
+.mat-mdc-card {
+    background-color: $spotify-dark-secondary !important;
+    color: $spotify-text-primary !important;
+    border-radius: 8px !important;
+}
+
+.mat-mdc-chip {
+    background-color: $spotify-dark !important;
+    color: $spotify-text-primary !important;
+
+    &:hover {
+        background-color: $spotify-dark-secondary !important;
+    }
+
+    &-action-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.mat-mdc-list-item {
+    color: $spotify-text-primary !important;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+.mat-mdc-progress-spinner,
+.mat-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: #{$spotify-green} !important;
+    --mdc-circular-progress-track-color: rgba(255, 255, 255, 0.1) !important;
+
+    circle {
+        stroke: $spotify-green !important;
+    }
+
+    .mdc-circular-progress__determinate-circle,
+    .mdc-circular-progress__indeterminate-circle-graphic {
+        stroke: $spotify-green !important;
+    }
+}
+
+.mat-mdc-button,
+.mat-mdc-raised-button {
+    &.mat-primary {
+
+        .mat-mdc-progress-spinner,
+        .mat-progress-spinner {
+            --mdc-circular-progress-active-indicator-color: #{$spotify-black} !important;
+            --mdc-circular-progress-track-color: rgba(0, 0, 0, 0.1) !important;
+
+            circle {
+                stroke: $spotify-black !important;
+            }
+
+            .mdc-circular-progress__determinate-circle,
+            .mdc-circular-progress__indeterminate-circle-graphic {
+                stroke: $spotify-black !important;
+            }
+        }
+    }
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    background: $spotify-black;
+}
+
+.card-container {
+    background: $spotify-dark-secondary;
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 16px;
+    }
+
+    .card-container {
+        padding: 16px;
+    }
+}
+
+@media (min-width: 1200px) {
+    main {
+        width: 75%;
+        margin: 0 auto;
+    }
+}
