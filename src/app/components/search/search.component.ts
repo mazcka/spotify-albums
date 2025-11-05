@@ -13,13 +13,14 @@ import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AlbumDataService, Album } from '../../services/album-data.service';
 import { SearchHistoryService } from '../../services/search-history.service';
+import { AuthService } from '../../services/auth.service';
 import { SearchHistoryComponent } from './search-history/search-history.component';
 import { AlbumCardComponent } from '../album/album-card/album-card.component';
 import { SearchWelcomeComponent } from './search-welcome/search-welcome.component';
 
 @Component({
   selector: 'app-search',
-  
+
   imports: [
     CommonModule,
     FormsModule,
@@ -41,6 +42,7 @@ export class SearchComponent implements OnInit {
   private router = inject(Router);
   private albumDataService = inject(AlbumDataService);
   private searchHistoryService = inject(SearchHistoryService);
+  private authService = inject(AuthService);
 
   readonly searchQuery = signal('');
   readonly searchResults = this.albumDataService.searchResults;
@@ -48,6 +50,7 @@ export class SearchComponent implements OnInit {
   readonly error = this.albumDataService.error;
   readonly hasMore = this.albumDataService.hasMore;
   readonly history = this.searchHistoryService.searchHistory;
+  readonly isAuthenticated = this.authService.isAuthenticated;
 
   private searchSubject = new Subject<string>();
 
@@ -71,7 +74,7 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
     const savedQuery = this.albumDataService.currentQuery();
-    
+
     if (savedQuery && savedQuery.trim()) {
       this.searchQuery.set(savedQuery);
     }
@@ -112,7 +115,7 @@ export class SearchComponent implements OnInit {
     if (this.isLoadingMore() || this.isLoading()) {
       return;
     }
-    
+
     this.isLoadingMore.set(true);
     this.albumDataService.loadMoreAlbums().finally(() => {
       this.isLoadingMore.set(false);
@@ -122,12 +125,12 @@ export class SearchComponent implements OnInit {
   onScrolled(event: Event): void {
     const element = event.target as HTMLElement;
     if (!element) return;
-    
+
     const threshold = 300; // Load more when 300px from bottom
     const scrollTop = element.scrollTop;
     const scrollHeight = element.scrollHeight;
     const clientHeight = element.clientHeight;
-    
+
     if (scrollHeight - scrollTop <= clientHeight + threshold) {
       if (this.hasMore() && !this.isLoading() && !this.isLoadingMore()) {
         this.loadMore();
@@ -135,5 +138,7 @@ export class SearchComponent implements OnInit {
     }
   }
 
+  login(): void {
+    this.authService.login();
+  }
 }
-

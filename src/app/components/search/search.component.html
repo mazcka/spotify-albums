@@ -2,26 +2,48 @@
 @let searchResultsValue = searchResults();
 @let isLoadingData = isLoading();
 @let errorMessage = error();
+@let isAuthenticatedValue = isAuthenticated();
 
 <div class="search-container">
   <div class="search-header">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>חפש אלבומים</mat-label>
-      <input matInput type="text" [value]="searchQueryValue" (input)="onSearchInput($any($event.target).value)"
-        placeholder="הזן שם אלבום או אמן..." />
+      <input matInput type="text" [value]="searchQueryValue" [disabled]="!isAuthenticatedValue"
+        (input)="onSearchInput($any($event.target).value)" placeholder="הזן שם אלבום או אמן..." />
       <mat-icon matPrefix>search</mat-icon>
       @if (searchQueryValue.trim()) {
       <button mat-icon-button matSuffix (click)="clearSearch()" type="button">
         <mat-icon>close</mat-icon>
       </button>
       }
+      @if (!isAuthenticatedValue) {
+      <mat-hint class="auth-hint">
+        <mat-icon>lock</mat-icon>
+        התחבר כדי לחפש
+      </mat-hint>
+      }
     </mat-form-field>
   </div>
 
+  @if (isAuthenticatedValue) {
   <app-search-history [history]="history()" (onQuerySelect)="onHistoryQuerySelect($event)"
     (onQueryRemove)="onHistoryQueryRemove($event)" />
+  } @else {
+  <mat-card class="auth-required-card">
+    <mat-card-content>
+      <mat-icon class="auth-icon">lock_outline</mat-icon>
+      <h3>התחברות נדרשת</h3>
+      <p>עליך להתחבר ל-Spotify כדי לחפש אלבומים</p>
+      <button mat-raised-button color="primary" (click)="login()">
+        <mat-icon>login</mat-icon>
+        התחבר ל-Spotify
+      </button>
+    </mat-card-content>
+  </mat-card>
+  }
 
 
+  @if (isAuthenticatedValue) {
   @if (errorMessage && !isLoadingData) {
   <mat-card class="error-card">
     <mat-card-content>
@@ -67,5 +89,6 @@
 
   @if (searchResultsValue.length === 0 && !isLoadingData && !errorMessage && !searchQueryValue.trim()) {
   <app-search-welcome />
+  }
   }
 </div>

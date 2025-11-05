@@ -1,14 +1,8 @@
 @use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
 
 .welcome-card {
-  margin-top: 24px;
-  background: linear-gradient(135deg, rgba(29, 185, 84, 0.1) 0%, rgba(18, 18, 18, 0.8) 100%);
-  background-color: $spotify-dark-secondary !important;
-  border: 1px solid rgba(29, 185, 84, 0.2);
-
-  mat-card-content {
-    padding: 48px 24px;
-  }
+  @include welcome-card-base;
 
   .welcome-content {
     display: flex;

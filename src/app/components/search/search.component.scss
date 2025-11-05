@@ -1,4 +1,5 @@
 @use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 .search-container {
   padding: 24px;
@@ -21,6 +22,11 @@
             .mat-mdc-form-field-input-control input {
               color: $spotify-text-primary !important;
               font-size: 16px;
+
+              &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+              }
             }
           }
         }
@@ -29,6 +35,59 @@
           .mat-mdc-text-field-wrapper {
             border: 2px solid $spotify-green !important;
           }
+        }
+
+        .auth-hint {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          color: $spotify-green;
+          font-size: 12px;
+          margin-top: 4px;
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .auth-required-card {
+    @include welcome-card-base;
+    text-align: center;
+
+    mat-card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .auth-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: $spotify-green;
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        margin: 1rem 0;
+        color: $spotify-text-primary;
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      p {
+        color: $spotify-text-secondary;
+        margin-bottom: 1.5rem;
+        font-size: 16px;
+      }
+
+      button {
+        mat-icon {
+          margin-left: 8px;
         }
       }
     }
